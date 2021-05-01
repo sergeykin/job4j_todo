@@ -1,0 +1,112 @@
+<html>
+<head>
+    <title>Список дел</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<script>
+    function getToDo(type) {
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/job4j_todo/todo",
+            dataType: "json",
+            origin: "http://localhost:8080/job4j_todo",
+            success: function (data) {
+                 let todoTable = "";
+                 for (let i = 0; i < data.length; i++) {
+                     if (type == 1 || data[i]['done'].toString() === 'false') {
+                         todoTable += "<tr>";
+                         todoTable += "<td>" + data[i]['id'] + "</td>";
+                         todoTable += "<td>" + data[i]['desc'] + "</td>";
+                         todoTable += "<td>" + new Date(data[i]['created']) + "</td>";
+                         if (data[i]['done'].toString() === 'true') {
+                             todoTable += '<td><input type="checkbox" id="' + data[i]['id'] + '" onchange="changeTaskStatus(this.id, this.checked)" checked>' + '</td>';
+                         } else {
+                             todoTable += '<td><input type="checkbox" id="' + data[i]['id'] + '" onchange="changeTaskStatus(this.id, this.checked)">' + '</td>';
+                         }
+                         todoTable += "</tr>";
+                     }
+
+                 }
+                 $('#todo').html(todoTable);
+            }
+        })
+
+
+    }
+
+    function addTask() {
+        if ($('#descr').val()==''){
+            alert($('#descr').attr('placeholder'));
+            return ;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "http://localhost:8080/job4j_todo/todo",
+            dataType: "json",
+            data: {"desc":$('#descr').val()},
+            success: function (data) {
+                getToDo(1);
+            }
+        })
+
+        return true;
+    }
+
+    function changeTaskStatus(id, status) {
+
+        $.ajax({
+            type: "POST",
+            url: "http://localhost:8080/job4j_todo/todo",
+            dataType: "json",
+            data: {"id":id, "done":status},
+            success: function (data) {
+                getToDo(1);
+            }
+        })
+
+        return true;
+    }
+
+</script>
+<div class="container">
+    <div class="form-group">
+        <label for="descr">Описание задачи</label>
+        <input type="text" class="form-control" id="descr" placeholder="Введите описание"/>
+        <input type="button" value="+" onclick="addTask()">
+    </div>
+    <div>
+        <label >Показ задач</label>
+    </div>
+
+    <div class="btn-group" id = "btngroup">
+        <button type="button" class="btn btn-primary" onclick="getToDo(1)" >Все</button>
+        <button type="button" class="btn btn-primary" onclick="getToDo(2)">Нужно выполнить</button>
+    </div>
+    <h2>Список запланированных дел</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Номер задачи</th>
+            <th>Описание задачи</th>
+            <th>Дата и время создания</th>
+            <th>Готовность</th>
+        </tr>
+        </thead>
+        <tbody id="todo">
+        <tr>
+            <td> </td>
+            <td> </td>
+            <td> </td>
+            <td> </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

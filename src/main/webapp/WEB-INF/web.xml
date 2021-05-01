@@ -4,4 +4,13 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+  <servlet>
+    <servlet-name>ToDoServlet</servlet-name>
+    <servlet-class>ru.job4j.todo.servlet.ToDoServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>ToDoServlet</servlet-name>
+    <url-pattern>/todo</url-pattern>
+  </servlet-mapping>
 </web-app>
