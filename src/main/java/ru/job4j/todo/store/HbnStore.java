@@ -2,12 +2,15 @@ package ru.job4j.todo.store;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import ru.job4j.todo.model.Item;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.function.Function;
+
 
 public class HbnStore implements Store, AutoCloseable {
 
@@ -69,24 +72,16 @@ public class HbnStore implements Store, AutoCloseable {
 
     @Override
     public List<Item> findAll() {
-        List result;
-        try (Session session = sf.openSession()) {
-            session.beginTransaction();
-            result = session.createQuery("from ru.job4j.todo.model.Item order by created desc ").list();
-            session.getTransaction().commit();
-        }
-        return result;
+        return this.tx(
+                session -> session.createQuery("from ru.job4j.todo.model.Item order by created desc ").list()
+        );
     }
 
     @Override
     public Item findById(Integer id) {
-        Item result;
-        try (Session session = sf.openSession()) {
-            session.beginTransaction();
-            result = session.get(Item.class, id);
-            session.getTransaction().commit();
-        }
-        return result;
+        return this.tx(
+                session -> session.get(Item.class, id)
+        );
     }
 
     @Override
@@ -110,10 +105,21 @@ public class HbnStore implements Store, AutoCloseable {
         System.out.println(hbmTracker.findAll());
         hbmTracker.replace(item.getId(), item2);
         System.out.println(hbmTracker.findAll());
-        //hbmTracker.delete(item.getId());
-        //hbmTracker.delete(item2.getId());
-        //System.out.println(hbmTracker.delete(333333333));
-
         hbmTracker.close();
+    }
+
+    private <T> T tx(final Function<Session, T> command) {
+        final Session session = sf.openSession();
+        final Transaction tx = session.beginTransaction();
+        try {
+            T rsl = command.apply(session);
+            tx.commit();
+            return rsl;
+        } catch (final Exception e) {
+            session.getTransaction().rollback();
+            throw e;
+        } finally {
+            session.close();
+        }
     }
 }
