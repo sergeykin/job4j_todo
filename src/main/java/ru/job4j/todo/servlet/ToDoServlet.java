@@ -39,10 +39,9 @@ public class ToDoServlet extends HttpServlet {
             item.setDone(done);
             HbnStore.instOf().replace(id, item);
         } else {
-            if (desc != null) {
-                item = new Item(desc, new Timestamp(System.currentTimeMillis()), false);
-                HbnStore.instOf().add(item);
-            }
+            item = new Item(desc, new Timestamp(System.currentTimeMillis()), false);
+            HbnStore.instOf().add(item);
+
         }
 
         req.setCharacterEncoding("UTF-8");
