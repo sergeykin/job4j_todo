@@ -1,6 +1,8 @@
 package ru.job4j.todo.store;
 
 import ru.job4j.todo.model.Item;
+import ru.job4j.todo.model.Role;
+import ru.job4j.todo.model.User;
 
 import java.util.List;
 
@@ -10,4 +12,10 @@ public interface Store extends AutoCloseable {
     boolean delete(Integer id);
     List<Item> findAll();
     Item findById(Integer id);
+    Role findRoleById(Integer id);
+    Role findRoleByName(String name);
+
+    User findUserByName(String name);
+    User save(User user);
+    Role save(Role role);
 }

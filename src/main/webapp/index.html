@@ -1,4 +1,3 @@
-<html>
 <head>
     <title>Список дел</title>
     <meta charset="utf-8">
@@ -9,16 +8,22 @@
 </head>
 <body>
 <script>
-    function getToDo(type) {
+    setTimeout(function(){
+        getToDo();
+    }, 15000);
+
+    function getToDo() {
+        var params = "showalltodo=" + radiotodo2.checked;
+        params = params + "&showalluser=" + todoCheck.checked;
         $.ajax({
             type: "GET",
             url: "http://localhost:8080/job4j_todo/todo",
+            data: params,
             dataType: "json",
             origin: "http://localhost:8080/job4j_todo",
             success: function (data) {
                  let todoTable = "";
                  for (let i = 0; i < data.length; i++) {
-                     if (type == 1 || data[i]['done'].toString() === 'false') {
                          todoTable += "<tr>";
                          todoTable += "<td>" + data[i]['id'] + "</td>";
                          todoTable += "<td>" + data[i]['desc'] + "</td>";
@@ -28,10 +33,10 @@
                          } else {
                              todoTable += '<td><input type="checkbox" id="' + data[i]['id'] + '" onchange="changeTaskStatus(this.id, this.checked)">' + '</td>';
                          }
+                            todoTable += "<td>" + data[i]['user']['name'] + "</td>";
+
                          todoTable += "</tr>";
                      }
-
-                 }
                  $('#todo').html(todoTable);
             }
         })
@@ -51,7 +56,7 @@
             dataType: "json",
             data: {"desc":$('#descr').val()},
             success: function (data) {
-                getToDo(1);
+                getToDo();
             }
         })
 
@@ -66,7 +71,7 @@
             dataType: "json",
             data: {"id":id, "done":status},
             success: function (data) {
-                getToDo(1);
+                getToDo();
             }
         })
 
@@ -75,6 +80,7 @@
 
 </script>
 <div class="container">
+    <a href="/job4j_todo/login.jsp" class="badge badge-primary">Вход</a>
     <div class="form-group">
         <label for="descr">Описание задачи</label>
         <input type="text" class="form-control" id="descr" placeholder="Введите описание"/>
@@ -83,10 +89,24 @@
     <div>
         <label >Показ задач</label>
     </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="radiotodo" id="radiotodo1" value="1" onclick="getToDo()" checked>
+        <label class="form-check-label" for="radiotodo1">
+            Нужно выполнить
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="radiotodo" id="radiotodo2" value="2" onclick="getToDo()">
+        <label class="form-check-label" for="radiotodo2">
+            Все
+        </label>
+    </div>
 
-    <div class="btn-group" id = "btngroup">
-        <button type="button" class="btn btn-primary" onclick="getToDo(1)" >Все</button>
-        <button type="button" class="btn btn-primary" onclick="getToDo(2)">Нужно выполнить</button>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="todoCheck" onclick="getToDo()">
+        <label class="form-check-label" for="todoCheck">
+            Показывать задачи всех пользователей
+        </label>
     </div>
     <h2>Список запланированных дел</h2>
     <table class="table">
@@ -96,15 +116,10 @@
             <th>Описание задачи</th>
             <th>Дата и время создания</th>
             <th>Готовность</th>
+            <th>Пользователь</th>
         </tr>
         </thead>
         <tbody id="todo">
-        <tr>
-            <td> </td>
-            <td> </td>
-            <td> </td>
-            <td> </td>
-        </tr>
         </tbody>
     </table>
 </div>
