@@ -33,46 +33,46 @@ public class HbnStore implements Store, AutoCloseable {
 
     @Override
     public Item add(Item item) {
-        try (Session session = sf.openSession()) {
-            session.beginTransaction();
-            session.save(item);
-            session.getTransaction().commit();
-        }
-        return item;
+        return this.tx(
+                session -> {
+                    session.save(item);
+                    return item;
+                }
+        );
     }
 
     @Override
     public boolean replace(Integer id, Item item) {
-        boolean result = false;
-        Item itemold = this.findById(id);
-        if (itemold != null) {
-            try (Session session = sf.openSession()) {
-                session.beginTransaction();
-                itemold.setDesc(item.getDesc());
-                itemold.setCreated(item.getCreated());
-                itemold.setDone(item.getDone());
-                itemold.setUser(item.getUser());
-                session.update(itemold);
-                result = true;
-                session.getTransaction().commit();
-            }
-        }
-        return result;
+        return this.tx(
+                session -> {
+                    boolean result = false;
+                    Item itemold = this.findById(id);
+                    if (itemold != null) {
+                        itemold.setDesc(item.getDesc());
+                        itemold.setCreated(item.getCreated());
+                        itemold.setDone(item.getDone());
+                        itemold.setUser(item.getUser());
+                        session.update(itemold);
+                        result = true;
+                    }
+                    return result;
+                }
+        );
     }
 
     @Override
     public boolean delete(Integer id) {
-        boolean result = false;
-        Item item = this.findById(id);
-        if (item != null) {
-            try (Session session = sf.openSession()) {
-                session.beginTransaction();
-                session.delete(item);
-                result = true;
-                session.getTransaction().commit();
-            }
-        }
-        return result;
+        return this.tx(
+                session -> {
+                    boolean result = false;
+                    Item item = this.findById(id);
+                    if (item != null) {
+                        session.delete(item);
+                        result = true;
+                    }
+                    return result;
+                }
+        );
     }
 
     @Override
@@ -98,14 +98,14 @@ public class HbnStore implements Store, AutoCloseable {
         Store hbmTracker = HbnStore.instOf();
         Role role = Role.of("ADMIN");
         role = hbmTracker.save(role);
-        User user1 = User.of("Sega",role);
+        User user1 = User.of("Sega", role);
         user1 = hbmTracker.save(user1);
         Item item = new Item("name1"
                 , new Timestamp(System.currentTimeMillis())
                 , false
                 , user1
         );
-        User user2 = User.of("Sega",role);
+        User user2 = User.of("Sega2", role);
         user2 = hbmTracker.save(user2);
         System.out.println(item.toString());
         Item item2 = new Item("name2",
@@ -133,63 +133,62 @@ public class HbnStore implements Store, AutoCloseable {
 
     @Override
     public User findUserByName(String name) {
-        User user = null;
-            try (Session session = sf.openSession()) {
-                session.beginTransaction();
-                Query query = session.createQuery("FROM ru.job4j.todo.model.User where name = :name");
-                query.setParameter("name", name);
-                if (!query.getResultList().isEmpty())  {
-                    user = (User)query.getResultList().get(0);
+        return this.tx(
+                session -> {
+                    User user = null;
+                    final Query query = session.createQuery("FROM ru.job4j.todo.model.User where name = :name");
+                    query.setParameter("name", name);
+                    if (!query.getResultList().isEmpty()) {
+                        user = (User) query.getResultList().get(0);
+                    }
+                    return user;
                 }
-                session.getTransaction().commit();
-            }
-        return user;
+        );
     }
 
     @Override
     public Role findRoleByName(String name) {
-        Role role = null;
-        try (Session session = sf.openSession()) {
-            session.beginTransaction();
-            Query query = session.createQuery("FROM ru.job4j.todo.model.Role where name = :name");
-            query.setParameter("name", name);
-            if (!query.getResultList().isEmpty())  {
-                role = (Role)query.getResultList().get(0);
-            }
-
-            session.getTransaction().commit();
-        }
-        return role;
+        return this.tx(
+                session -> {
+                    Role role = null;
+                    final Query query = session.createQuery("FROM ru.job4j.todo.model.Role where name = :name");
+                    query.setParameter("name", name);
+                    if (!query.getResultList().isEmpty()) {
+                        role = (Role) query.getResultList().get(0);
+                    }
+                    return role;
+                }
+        );
     }
 
     @Override
     public User save(User user) {
-        User userold = this.findUserByName(user.getName());
-        try (Session session = sf.openSession()) {
-            session.beginTransaction();
-            if (userold != null) {
-                userold.setRole(user.getRole());
-                session.save(userold);
-            } else {
-                session.save(user);
-            }
+        return this.tx(
+                session -> {
+                    User userold = this.findUserByName(user.getName());
+                    if (userold != null) {
+                        userold.setRole(user.getRole());
+                        session.save(userold);
+                    } else {
+                        session.save(user);
+                    }
+                    return userold != null ? userold : user;
+                }
+        );
 
-            session.getTransaction().commit();
-        }
-        return userold!=null?userold:user;
     }
 
     @Override
     public Role save(Role role) {
-        Role roleold = this.findRoleByName(role.getName());
-        try (Session session = sf.openSession()) {
-            session.beginTransaction();
-            if (roleold == null) {
-                session.save(role);
-            }
-            session.getTransaction().commit();
-        }
-        return roleold!=null?roleold:role;
+        return this.tx(
+                session -> {
+                    Role roleold = this.findRoleByName(role.getName());
+                    if (roleold == null) {
+                        session.save(role);
+                    }
+                    return roleold != null ? roleold : role;
+                }
+        );
     }
 
     private <T> T tx(final Function<Session, T> command) {
