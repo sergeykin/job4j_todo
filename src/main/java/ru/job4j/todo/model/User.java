@@ -1,6 +1,7 @@
 package ru.job4j.todo.model;
 
 
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -13,14 +14,9 @@ public class User {
 
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
-
-    public static User of(String name, Role role) {
+    public static User of(String name) {
         User user = new User();
         user.name = name;
-        user.role = role;
         return user;
     }
 
@@ -38,14 +34,6 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
     }
 
     @Override

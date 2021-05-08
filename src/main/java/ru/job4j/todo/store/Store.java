@@ -1,8 +1,6 @@
 package ru.job4j.todo.store;
 
-import ru.job4j.todo.model.Item;
-import ru.job4j.todo.model.Role;
-import ru.job4j.todo.model.User;
+import ru.job4j.todo.model.*;
 
 import java.util.List;
 

@@ -6,6 +6,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import ru.job4j.todo.model.CarBrand;
+import ru.job4j.todo.model.CarModel;
 import ru.job4j.todo.model.Role;
 import ru.job4j.todo.model.User;
 import java.util.List;
@@ -16,11 +18,27 @@ public class HbmRun {
                 .configure().build();
         try {
             SessionFactory sf = new MetadataSources(registry).buildMetadata().buildSessionFactory();
-            Role role = create(Role.of("ADMIN"), sf);
-            create(User.of("Petr Arsentev", role), sf);
-            for (User user : findAll(User.class, sf)) {
-                System.out.println(user.getName() + " " + user.getRole().getName());
-            }
+            Session session = sf.openSession();
+            session.beginTransaction();
+
+            CarModel carModel1 = CarModel.of("carModel1");
+            CarModel carModel2 = CarModel.of("carModel2");
+
+            CarBrand carBrand1 = CarBrand.of("carBrand");
+            carBrand1.getCarModels().add(carModel1);
+            carBrand1.getCarModels().add(carModel2);
+            session.save(carBrand1);
+//            User one = User.of("Petr");
+//            User two = User.of("Andrei");
+//
+//            Role admin = Role.of("ADMIN");
+//            admin.getUsers().add(one);
+//            admin.getUsers().add(two);
+//
+//            session.save(admin);
+
+            session.getTransaction().commit();
+            session.close();
         }  catch (Exception e) {
             e.printStackTrace();
         } finally {

@@ -12,8 +12,19 @@ create table j_role (
                         name varchar(2000)
 );
 
+drop table  j_user cascade;
 create table j_user (
+                          id serial primary key,
+                          name varchar(2000)
+    --,role_id int not null references j_role(id)
+  );
+
+create table car_model (
                         id serial primary key,
-                        name varchar(2000),
-                        role_id int not null references j_role(id)
+                        name varchar(2000)
+);
+
+create table car_brand (
+                        id serial primary key,
+                        name varchar(2000)
 );

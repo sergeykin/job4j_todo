@@ -1,25 +1,21 @@
 package ru.job4j.todo.model;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "j_role")
-public class Role {
+@Table(name = "car_model")
+public class CarModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    int id;
 
-    private String name;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<User> users = new ArrayList<>();
+    String name;
 
-    public static Role of(String name) {
-        Role role = new Role();
-        role.name = name;
-        return role;
+    public static CarModel of(String name) {
+        CarModel carModel = new CarModel();
+        carModel.name = name;
+        return carModel;
     }
 
     public int getId() {
@@ -38,20 +34,12 @@ public class Role {
         this.name = name;
     }
 
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Role role = (Role) o;
-        return id == role.id;
+        CarModel carModel = (CarModel) o;
+        return id == carModel.id;
     }
 
     @Override

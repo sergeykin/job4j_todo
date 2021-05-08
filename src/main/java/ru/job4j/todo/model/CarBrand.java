@@ -5,21 +5,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+
 @Entity
-@Table(name = "j_role")
-public class Role {
+@Table(name = "car_brand")
+public class CarBrand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    int id;
 
-    private String name;
+    String name;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<User> users = new ArrayList<>();
+    private List<CarModel> carModels = new ArrayList<>();
 
-    public static Role of(String name) {
-        Role role = new Role();
-        role.name = name;
-        return role;
+    public static CarBrand of(String name) {
+        CarBrand carBrand = new CarBrand();
+        carBrand.name = name;
+        return carBrand;
     }
 
     public int getId() {
@@ -38,20 +40,20 @@ public class Role {
         this.name = name;
     }
 
-    public List<User> getUsers() {
-        return users;
+    public List<CarModel> getCarModels() {
+        return carModels;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void setCarModels(List<CarModel> carModels) {
+        this.carModels = carModels;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Role role = (Role) o;
-        return id == role.id;
+        CarBrand carBrand = (CarBrand) o;
+        return id == carBrand.id;
     }
 
     @Override

@@ -98,14 +98,14 @@ public class HbnStore implements Store, AutoCloseable {
         Store hbmTracker = HbnStore.instOf();
         Role role = Role.of("ADMIN");
         role = hbmTracker.save(role);
-        User user1 = User.of("Sega", role);
+        User user1 = User.of("Sega");
         user1 = hbmTracker.save(user1);
         Item item = new Item("name1"
                 , new Timestamp(System.currentTimeMillis())
                 , false
                 , user1
         );
-        User user2 = User.of("Sega2", role);
+        User user2 = User.of("Sega2");
         user2 = hbmTracker.save(user2);
         System.out.println(item.toString());
         Item item2 = new Item("name2",
@@ -167,7 +167,7 @@ public class HbnStore implements Store, AutoCloseable {
                 session -> {
                     User userold = this.findUserByName(user.getName());
                     if (userold != null) {
-                        userold.setRole(user.getRole());
+                        //userold.setRole(user.getRole());
                         session.save(userold);
                     } else {
                         session.save(user);

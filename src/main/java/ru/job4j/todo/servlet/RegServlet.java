@@ -22,8 +22,8 @@ public class RegServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         HbnStore.instOf().save(
                 User.of(
-                        req.getParameter("name"),
-                        HbnStore.instOf().findRoleByName("ADMIN")
+                        req.getParameter("name")
+                       // ,HbnStore.instOf().findRoleByName("ADMIN")
                 )
         );
         resp.sendRedirect(req.getContextPath() + "/auth.do");
