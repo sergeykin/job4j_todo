@@ -22,5 +22,9 @@
         <mapping class="ru.job4j.todo.model.Role"/>
         <mapping class="ru.job4j.todo.model.CarBrand"/>
         <mapping class="ru.job4j.todo.model.CarModel"/>
+        <mapping class="ru.job4j.todo.model.Person"/>
+        <mapping class="ru.job4j.todo.model.Address"/>
+        <mapping class="ru.job4j.todo.model.Book"/>
+        <mapping class="ru.job4j.todo.model.Author"/>
     </session-factory>
 </hibernate-configuration>
