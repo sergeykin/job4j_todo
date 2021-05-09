@@ -11,9 +11,9 @@ import java.util.Objects;
 public class CarBrand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    private int id;
 
-    String name;
+    private String name;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CarModel> carModels = new ArrayList<>();

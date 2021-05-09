@@ -8,9 +8,9 @@ import java.util.Objects;
 public class CarModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    private int id;
 
-    String name;
+    private String name;
 
     public static CarModel of(String name) {
         CarModel carModel = new CarModel();
