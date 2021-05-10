@@ -15,8 +15,9 @@ public class CarBrand {
 
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CarModel> carModels = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "car_brand_id")
+    private CarModel carModel;
 
     public static CarBrand of(String name) {
         CarBrand carBrand = new CarBrand();
@@ -40,12 +41,12 @@ public class CarBrand {
         this.name = name;
     }
 
-    public List<CarModel> getCarModels() {
-        return carModels;
+    public CarModel getCarModel() {
+        return carModel;
     }
 
-    public void setCarModels(List<CarModel> carModels) {
-        this.carModels = carModels;
+    public void setCarModel(CarModel carModel) {
+        this.carModel = carModel;
     }
 
     @Override
@@ -59,5 +60,14 @@ public class CarBrand {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "CarBrand{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", carModel=" + carModel +
+                '}';
     }
 }

@@ -1,26 +1,26 @@
 package ru.job4j.todo.model;
 
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "car_model")
-public class CarModel {
+@Table(name = "categories")
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String name;
+    @OneToMany(mappedBy = "category")
+    private List<Task> tasks = new ArrayList<>();
 
-    @OneToMany(mappedBy = "carModel")
-    private List<CarBrand> carBrands = new ArrayList<>();
-
-    public static CarModel of(String name) {
-        CarModel carModel = new CarModel();
-        carModel.name = name;
-        return carModel;
+    public static Category of(String name) {
+        Category category = new Category();
+        category.name = name;
+        return category;
     }
 
     public int getId() {
@@ -39,20 +39,20 @@ public class CarModel {
         this.name = name;
     }
 
-    public List<CarBrand> getCarBrands() {
-        return carBrands;
+    public List<Task> getTasks() {
+        return tasks;
     }
 
-    public void setCarBrands(List<CarBrand> carBrands) {
-        this.carBrands = carBrands;
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CarModel carModel = (CarModel) o;
-        return id == carModel.id;
+        Category category = (Category) o;
+        return id == category.id;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class CarModel {
 
     @Override
     public String toString() {
-        return "CarModel{" +
+        return "Category{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';

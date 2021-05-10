@@ -8,29 +8,83 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import ru.job4j.todo.model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HbmRun {
+
     public static void main(String[] args) {
+        List<CarModel> list = new ArrayList<>();
         final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .configure().build();
         try {
             SessionFactory sf = new MetadataSources(registry).buildMetadata().buildSessionFactory();
             Session session = sf.openSession();
             session.beginTransaction();
+            list = session.createQuery(
+                    "select distinct c from CarModel c join fetch c.carBrands"
+            ).list();
+            session.getTransaction().commit();
+            session.close();
+        }  catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            StandardServiceRegistryBuilder.destroy(registry);
+        }
+        for (CarBrand carBrand : list.get(0).getCarBrands()) {
+            System.out.println(carBrand);
+        }
 
-            Book book1 = Book.of("book1");
-            Book book2 = Book.of("book2");
-
-            Author author1 = Author.of("author1");
-            Author author2 = Author.of("author2");
-
-            author1.getBooks().add(book1);
-            author1.getBooks().add(book2);
-
-            author2.getBooks().add(book1);
-            session.persist(author1);
-            session.persist(author2);
+    }
+//    public static void main(String[] args) {
+//        List<Category> list = new ArrayList<>();
+//        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
+//                .configure().build();
+//        try {
+//            SessionFactory sf = new MetadataSources(registry).buildMetadata().buildSessionFactory();
+//            Session session = sf.openSession();
+//            session.beginTransaction();
+////            list = session.createQuery("from Category").list();
+//            list = session.createQuery(
+//                    "select distinct c from Category c join fetch c.tasks"
+//            ).list();
+////            for (Category category : list) {
+////                for (Task task : category.getTasks()) {
+////                    System.out.println(task);
+////                }
+////            }
+//            session.getTransaction().commit();
+//            session.close();
+//        }  catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            StandardServiceRegistryBuilder.destroy(registry);
+//        }
+//        for (Task task : list.get(0).getTasks()) {
+//            System.out.println(task);
+//        }
+//
+//    }
+//    public static void main(String[] args) {
+//        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
+//                .configure().build();
+//        try {
+//            SessionFactory sf = new MetadataSources(registry).buildMetadata().buildSessionFactory();
+//            Session session = sf.openSession();
+//            session.beginTransaction();
+//
+//            Book book1 = Book.of("book1");
+//            Book book2 = Book.of("book2");
+//
+//            Author author1 = Author.of("author1");
+//            Author author2 = Author.of("author2");
+//
+//            author1.getBooks().add(book1);
+//            author1.getBooks().add(book2);
+//
+//            author2.getBooks().add(book1);
+//            session.persist(author1);
+//            session.persist(author2);
 //            Person person = session.get(Person.class, 1);
 //            session.remove(person);
 //            Address one = Address.of("Kazanskaya", "1");
@@ -62,14 +116,14 @@ public class HbmRun {
 //
 //            session.save(admin);
 
-            session.getTransaction().commit();
-            session.close();
-        }  catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            StandardServiceRegistryBuilder.destroy(registry);
-        }
-    }
+//            session.getTransaction().commit();
+//            session.close();
+//        }  catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            StandardServiceRegistryBuilder.destroy(registry);
+//        }
+//    }
 
     public static <T> T create(T model, SessionFactory sf) {
         Session session = sf.openSession();
