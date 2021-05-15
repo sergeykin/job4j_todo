@@ -2,6 +2,7 @@ package ru.job4j.todo.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.job4j.todo.model.Item;
+import ru.job4j.todo.model.ItemCategory;
 import ru.job4j.todo.model.User;
 import ru.job4j.todo.store.HbnStore;
 
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -53,10 +55,20 @@ public class ToDoServlet extends HttpServlet {
         } else {
             User user = (User) req.getSession().getAttribute("user");
             if (user != null) {
+                String[] cIds = req.getParameterValues("cIds");
+                List<ItemCategory> itemCategories = new ArrayList<>();
+                for (String idCategory : cIds) {
+                    ItemCategory itemCategory = HbnStore.instOf().findItemCategoryById(Integer.parseInt(idCategory));
+                    if (itemCategory != null) {
+                        itemCategories.add(itemCategory);
+                    }
+                }
                 item = new Item(desc, new Timestamp(System.currentTimeMillis()), false, user);
+                item.setItemCategories(itemCategories);
                 HbnStore.instOf().add(item);
             }
         }
         req.setCharacterEncoding("UTF-8");
+        resp.sendRedirect(req.getContextPath() + "/");
     }
 }

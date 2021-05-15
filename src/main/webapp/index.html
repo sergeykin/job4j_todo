@@ -10,7 +10,7 @@
 <script>
     setTimeout(function(){
         getToDo();
-    }, 15000);
+    }, 500);
 
     function getToDo() {
         var params = "showalltodo=" + radiotodo2.checked;
@@ -82,10 +82,11 @@
 <div class="container">
     <a href="/job4j_todo/login.jsp" class="badge badge-primary">Вход</a>
     <div class="form-group">
-        <label for="descr">Описание задачи</label>
-        <input type="text" class="form-control" id="descr" placeholder="Введите описание"/>
-        <input type="button" value="+" onclick="addTask()">
+<!--        <label for="descr">Описание задачи</label>-->
+<!--        <input type="text" class="form-control" id="descr" placeholder="Введите описание"/>-->
+<!--        <input type="button" value="+" onclick="addTask()">-->
     </div>
+    <a href="/job4j_todo/additem" class="badge badge-primary">Добавить задачу</a>
     <div>
         <label >Показ задач</label>
     </div>

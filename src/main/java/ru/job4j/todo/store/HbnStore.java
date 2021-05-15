@@ -7,11 +7,13 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import ru.job4j.todo.model.Item;
+import ru.job4j.todo.model.ItemCategory;
 import ru.job4j.todo.model.Role;
 import ru.job4j.todo.model.User;
 
 import javax.persistence.Query;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -52,6 +54,8 @@ public class HbnStore implements Store, AutoCloseable {
                         itemold.setCreated(item.getCreated());
                         itemold.setDone(item.getDone());
                         itemold.setUser(item.getUser());
+                        itemold.setItemCategories(item.getItemCategories());
+
                         session.update(itemold);
                         result = true;
                     }
@@ -96,31 +100,18 @@ public class HbnStore implements Store, AutoCloseable {
 
     public static void main(String[] args) throws Exception {
         Store hbmTracker = HbnStore.instOf();
-        Role role = Role.of("ADMIN");
-        role = hbmTracker.save(role);
-        User user1 = User.of("Sega");
-        user1 = hbmTracker.save(user1);
-        Item item = new Item("name1"
-                , new Timestamp(System.currentTimeMillis())
-                , false
-                , user1
-        );
-        User user2 = User.of("Sega2");
-        user2 = hbmTracker.save(user2);
-        System.out.println(item.toString());
-        Item item2 = new Item("name2",
-                new Timestamp(System.currentTimeMillis()),
-                false
-                , user2
-        );
+        System.out.println(hbmTracker.findAllItemCategory());
+        User user = hbmTracker.findUserByName("user1");
+        Item item = new Item("new Item", new Timestamp(System.currentTimeMillis()), false, user);
+        List<ItemCategory> itemCategories = new ArrayList<>();
+        itemCategories.add(hbmTracker.findItemCategoryById(1));
+        itemCategories.add(hbmTracker.findItemCategoryById(2));
+        item.setItemCategories(itemCategories);
+
         hbmTracker.add(item);
-        hbmTracker.add(item2);
-        System.out.println(item.toString());
-        System.out.println(hbmTracker.findAll());
-        hbmTracker.replace(item.getId(), item2);
-        System.out.println(hbmTracker.findAll());
-        hbmTracker.delete(item.getId());
-        hbmTracker.delete(item2.getId());
+        System.out.println(item);
+        //hbmTracker.delete(item.getId());
+        System.out.println(item);
         hbmTracker.close();
     }
 
@@ -188,6 +179,20 @@ public class HbnStore implements Store, AutoCloseable {
                     }
                     return roleold != null ? roleold : role;
                 }
+        );
+    }
+
+    @Override
+    public ItemCategory findItemCategoryById(Integer id) {
+        return this.tx(
+                session -> session.get(ItemCategory.class, id)
+        );
+    }
+
+    @Override
+    public List<ItemCategory> findAllItemCategory() {
+        return this.tx(
+                session -> session.createQuery("from ru.job4j.todo.model.ItemCategory order by name desc ").list()
         );
     }
 

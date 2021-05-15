@@ -9,8 +9,10 @@ public interface Store extends AutoCloseable {
     boolean replace(Integer id, Item item);
     boolean delete(Integer id);
     List<Item> findAll();
+    List<ItemCategory> findAllItemCategory();
     Item findById(Integer id);
     Role findRoleById(Integer id);
+    ItemCategory findItemCategoryById(Integer id);
     Role findRoleByName(String name);
 
     User findUserByName(String name);

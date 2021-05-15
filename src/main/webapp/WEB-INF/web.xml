@@ -29,6 +29,15 @@
         <servlet-class>ru.job4j.todo.servlet.RegServlet</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>HumanServlet</servlet-name>
+        <servlet-class>ru.job4j.todo.servlet.HumanServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ItemCategoryServlet</servlet-name>
+        <servlet-class>ru.job4j.todo.servlet.ItemCategoryServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>ToDoServlet</servlet-name>
         <url-pattern>/todo</url-pattern>
@@ -42,5 +51,12 @@
         <servlet-name>RegServlet</servlet-name>
         <url-pattern>/reg.do</url-pattern>
     </servlet-mapping>
-
+    <servlet-mapping>
+        <servlet-name>HumanServlet</servlet-name>
+        <url-pattern>/humans</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ItemCategoryServlet</servlet-name>
+        <url-pattern>/additem</url-pattern>
+    </servlet-mapping>
 </web-app>
