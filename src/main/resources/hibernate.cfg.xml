@@ -35,5 +35,10 @@
         <mapping class="ru.job4j.todo.model.City"/>
         <mapping class="ru.job4j.todo.model.Human"/>
         <mapping class="ru.job4j.todo.model.Product"/>
+
+        <mapping class="ru.job4j.todo.model.Car"/>
+        <mapping class="ru.job4j.todo.model.Driver"/>
+        <mapping class="ru.job4j.todo.model.Engine"/>
+        <mapping class="ru.job4j.todo.model.HistoryOwner"/>
     </session-factory>
 </hibernate-configuration>
