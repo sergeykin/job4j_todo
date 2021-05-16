@@ -10,20 +10,24 @@ import ru.job4j.todo.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 public class HbmRun {
 
     public static void main(String[] args) {
-        List<CarModel> list = new ArrayList<>();
         final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .configure().build();
         try {
             SessionFactory sf = new MetadataSources(registry).buildMetadata().buildSessionFactory();
-            Session session = sf.openSession();
+            Session session = sf
+                    .withOptions()
+                    //.jdbcTimeZone(TimeZone.getTimeZone("UTC"))
+                    .openSession();
             session.beginTransaction();
-            list = session.createQuery(
-                    "select distinct c from CarModel c join fetch c.carBrands"
-            ).list();
+
+            Product pr = Product.of("Молоко", "Савушкин продукт");
+            session.save(pr);
+
             session.getTransaction().commit();
             session.close();
         }  catch (Exception e) {
@@ -31,10 +35,6 @@ public class HbmRun {
         } finally {
             StandardServiceRegistryBuilder.destroy(registry);
         }
-        for (CarBrand carBrand : list.get(0).getCarBrands()) {
-            System.out.println(carBrand);
-        }
-
     }
 
     public static <T> T create(T model, SessionFactory sf) {
