@@ -12,15 +12,15 @@ import java.util.Objects;
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    private int id;
 
     @Column(name = "\"desc\"")
-    String desc;
+    private String desc;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
-    boolean done;
+    private boolean done;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

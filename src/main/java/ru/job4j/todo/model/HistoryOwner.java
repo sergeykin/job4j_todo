@@ -19,7 +19,7 @@ public class HistoryOwner {
             , nullable = false, updatable = false)},
             inverseJoinColumns = {@JoinColumn(name = "car_id",
                     nullable = false, updatable = false)})
-    public List<Driver> drivers = new ArrayList<>();
+    private List<Driver> drivers = new ArrayList<>();
 
     public HistoryOwner() {
     }

@@ -9,9 +9,9 @@ import java.util.Objects;
 public class ItemCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    private int id;
 
-    String name;
+    private String name;
 
     public static ItemCategory of(String name) {
         ItemCategory itemCategory = new ItemCategory();
