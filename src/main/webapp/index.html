@@ -8,7 +8,7 @@
 </head>
 <body>
 <script>
-    setTimeout(function(){
+    setTimeout(function () {
         getToDo();
     }, 500);
 
@@ -22,22 +22,28 @@
             dataType: "json",
             origin: "http://localhost:8080/job4j_todo",
             success: function (data) {
-                 let todoTable = "";
-                 for (let i = 0; i < data.length; i++) {
-                         todoTable += "<tr>";
-                         todoTable += "<td>" + data[i]['id'] + "</td>";
-                         todoTable += "<td>" + data[i]['desc'] + "</td>";
-                         todoTable += "<td>" + new Date(data[i]['created']) + "</td>";
-                         if (data[i]['done'].toString() === 'true') {
-                             todoTable += '<td><input type="checkbox" id="' + data[i]['id'] + '" onchange="changeTaskStatus(this.id, this.checked)" checked>' + '</td>';
-                         } else {
-                             todoTable += '<td><input type="checkbox" id="' + data[i]['id'] + '" onchange="changeTaskStatus(this.id, this.checked)">' + '</td>';
-                         }
-                            todoTable += "<td>" + data[i]['user']['name'] + "</td>";
+                let todoTable = "";
+                for (let i = 0; i < data.length; i++) {
+                    todoTable += "<tr>";
+                    todoTable += "<td>" + data[i]['id'] + "</td>";
+                    todoTable += "<td>" + data[i]['desc'] + "</td>";
+                    todoTable += "<td>" + new Date(data[i]['created']) + "</td>";
+                    if (data[i]['done'].toString() === 'true') {
+                        todoTable += '<td><input type="checkbox" id="' + data[i]['id'] + '" onchange="changeTaskStatus(this.id, this.checked)" checked>' + '</td>';
+                    } else {
+                        todoTable += '<td><input type="checkbox" id="' + data[i]['id'] + '" onchange="changeTaskStatus(this.id, this.checked)">' + '</td>';
+                    }
+                    todoTable += "<td>" + data[i]['user']['name'] + "</td>";
+                    todoTable += "<td>";
+                    for (let j = 0; j < data[i]['itemCategories'].length; j++) {
+                        todoTable += data[i]['itemCategories'][j]['name'] + " ";
+                    }
+                    todoTable += "</td>";
 
-                         todoTable += "</tr>";
-                     }
-                 $('#todo').html(todoTable);
+
+                    todoTable += "</tr>";
+                }
+                $('#todo').html(todoTable);
             }
         })
 
@@ -45,16 +51,16 @@
     }
 
     function addTask() {
-        if ($('#descr').val()==''){
+        if ($('#descr').val() == '') {
             alert($('#descr').attr('placeholder'));
-            return ;
+            return;
         }
 
         $.ajax({
             type: "POST",
             url: "http://localhost:8080/job4j_todo/todo",
             dataType: "json",
-            data: {"desc":$('#descr').val()},
+            data: {"desc": $('#descr').val()},
             success: function (data) {
                 getToDo();
             }
@@ -69,7 +75,7 @@
             type: "POST",
             url: "http://localhost:8080/job4j_todo/todo",
             dataType: "json",
-            data: {"id":id, "done":status},
+            data: {"id": id, "done": status},
             success: function (data) {
                 getToDo();
             }
@@ -82,16 +88,17 @@
 <div class="container">
     <a href="/job4j_todo/login.jsp" class="badge badge-primary">Вход</a>
     <div class="form-group">
-<!--        <label for="descr">Описание задачи</label>-->
-<!--        <input type="text" class="form-control" id="descr" placeholder="Введите описание"/>-->
-<!--        <input type="button" value="+" onclick="addTask()">-->
+        <!--        <label for="descr">Описание задачи</label>-->
+        <!--        <input type="text" class="form-control" id="descr" placeholder="Введите описание"/>-->
+        <!--        <input type="button" value="+" onclick="addTask()">-->
     </div>
     <a href="/job4j_todo/additem" class="badge badge-primary">Добавить задачу</a>
     <div>
-        <label >Показ задач</label>
+        <label>Показ задач</label>
     </div>
     <div class="form-check">
-        <input class="form-check-input" type="radio" name="radiotodo" id="radiotodo1" value="1" onclick="getToDo()" checked>
+        <input class="form-check-input" type="radio" name="radiotodo" id="radiotodo1" value="1" onclick="getToDo()"
+               checked>
         <label class="form-check-label" for="radiotodo1">
             Нужно выполнить
         </label>
@@ -118,6 +125,7 @@
             <th>Дата и время создания</th>
             <th>Готовность</th>
             <th>Пользователь</th>
+            <th>Категории</th>
         </tr>
         </thead>
         <tbody id="todo">
