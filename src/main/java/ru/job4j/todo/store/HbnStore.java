@@ -82,7 +82,7 @@ public class HbnStore implements Store, AutoCloseable {
     @Override
     public List<Item> findAll() {
         return this.tx(
-                session -> session.createQuery("from ru.job4j.todo.model.Item order by created desc ").list()
+                session -> session.createQuery("select item from ru.job4j.todo.model.Item item join fetch item.itemCategories").list()
         );
     }
 
