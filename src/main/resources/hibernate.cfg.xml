@@ -40,5 +40,8 @@
         <mapping class="ru.job4j.todo.model.Driver"/>
         <mapping class="ru.job4j.todo.model.Engine"/>
         <mapping class="ru.job4j.todo.model.HistoryOwner"/>
+        <mapping class="ru.job4j.todo.model.Student"/>
+        <mapping class="ru.job4j.todo.model.Candidate"/>
+
     </session-factory>
 </hibernate-configuration>
