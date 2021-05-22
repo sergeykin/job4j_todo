@@ -1,24 +1,25 @@
 package ru.job4j.todo.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "book")
-public class Book {
+@Table(name = "vacancy")
+public class Vacancy {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String name;
 
-    private String publishingHouse;
 
-    public static Book of(String name, String publishingHouse) {
-        Book book = new Book();
-        book.name = name;
-        book.publishingHouse = publishingHouse;
-        return book;
+    public static Vacancy of(String name) {
+        Vacancy vacancy = new Vacancy();
+        vacancy.name = name;
+        return vacancy;
     }
 
     public int getId() {
@@ -37,20 +38,12 @@ public class Book {
         this.name = name;
     }
 
-    public String getPublishingHouse() {
-        return publishingHouse;
-    }
-
-    public void setPublishingHouse(String publishingHouse) {
-        this.publishingHouse = publishingHouse;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Book book = (Book) o;
-        return id == book.id;
+        Vacancy vacancy = (Vacancy) o;
+        return id == vacancy.id;
     }
 
     @Override
@@ -60,10 +53,9 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Book{" +
+        return "Vacancy{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", publishingHouse='" + publishingHouse + '\'' +
                 '}';
     }
 }

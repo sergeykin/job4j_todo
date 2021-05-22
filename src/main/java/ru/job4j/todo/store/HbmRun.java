@@ -15,18 +15,23 @@ import java.util.TimeZone;
 public class HbmRun {
 
     public static void main(String[] args) {
+        Candidate rsl = null;
+
         final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .configure().build();
         try {
-            SessionFactory sf = new MetadataSources(registry).buildMetadata().buildSessionFactory();
-            Session session = sf
-                    .withOptions()
-                    //.jdbcTimeZone(TimeZone.getTimeZone("UTC"))
-                    .openSession();
+            SessionFactory sf = new MetadataSources(registry)
+                    .buildMetadata()
+                    .buildSessionFactory();
+            Session session = sf.openSession();
             session.beginTransaction();
 
-            Product pr = Product.of("Молоко", "Савушкин продукт");
-            session.save(pr);
+            rsl = session.createQuery(
+                    "select distinct st from Candidate st "
+                            + "join fetch st.baseVacancy a "
+                            + "join fetch a.vacancies b "
+                            + "where st.id = :sId", Candidate.class
+            ).setParameter("sId", 5).uniqueResult();
 
             session.getTransaction().commit();
             session.close();
@@ -35,6 +40,8 @@ public class HbmRun {
         } finally {
             StandardServiceRegistryBuilder.destroy(registry);
         }
+
+        System.out.println(rsl);
     }
 
     public static <T> T create(T model, SessionFactory sf) {

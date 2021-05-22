@@ -1,24 +1,26 @@
 package ru.job4j.todo.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "book")
-public class Book {
+@Table(name = "base_vacancy")
+public class BaseVacancy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String name;
 
-    private String publishingHouse;
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Vacancy> vacancies = new ArrayList<>();
 
-    public static Book of(String name, String publishingHouse) {
-        Book book = new Book();
-        book.name = name;
-        book.publishingHouse = publishingHouse;
-        return book;
+    public static BaseVacancy of(String name) {
+        BaseVacancy baseVacancy = new BaseVacancy();
+        baseVacancy.name = name;
+        return baseVacancy;
     }
 
     public int getId() {
@@ -37,20 +39,20 @@ public class Book {
         this.name = name;
     }
 
-    public String getPublishingHouse() {
-        return publishingHouse;
+    public List<Vacancy> getVacancies() {
+        return vacancies;
     }
 
-    public void setPublishingHouse(String publishingHouse) {
-        this.publishingHouse = publishingHouse;
+    public void setVacancies(List<Vacancy> vacancies) {
+        this.vacancies = vacancies;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Book book = (Book) o;
-        return id == book.id;
+        BaseVacancy that = (BaseVacancy) o;
+        return id == that.id;
     }
 
     @Override
@@ -60,10 +62,10 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Book{" +
+        return "BaseVacancy{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", publishingHouse='" + publishingHouse + '\'' +
+                ", vacancies=" + vacancies +
                 '}';
     }
 }

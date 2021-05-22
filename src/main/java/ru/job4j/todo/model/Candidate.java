@@ -15,6 +15,9 @@ public class Candidate {
 
     private int salary;
 
+    @OneToOne
+    private BaseVacancy baseVacancy;
+
     public static Candidate of(String name, String experience, int salary) {
         Candidate candidate = new Candidate();
         candidate.name = name;
@@ -55,6 +58,14 @@ public class Candidate {
         this.salary = salary;
     }
 
+    public BaseVacancy getBaseVacancy() {
+        return baseVacancy;
+    }
+
+    public void setBaseVacancy(BaseVacancy baseVacancy) {
+        this.baseVacancy = baseVacancy;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -75,6 +86,7 @@ public class Candidate {
                 ", name='" + name + '\'' +
                 ", experience='" + experience + '\'' +
                 ", salary=" + salary +
+                ", baseVacancy=" + baseVacancy +
                 '}';
     }
 }
