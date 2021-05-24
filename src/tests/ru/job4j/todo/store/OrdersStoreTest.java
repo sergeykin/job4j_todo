@@ -39,6 +39,11 @@ public class OrdersStoreTest {
         pool.getConnection().prepareStatement(builder.toString()).executeUpdate();
     }
 
+    @After
+    public void setOff() throws SQLException {
+        pool.getConnection().prepareStatement("drop table orders").executeUpdate();
+    }
+
     @Test
     public void whenSaveOrderAndFindAllOneRowWithDescription() throws SQLException {
         OrdersStore store = new OrdersStore(pool);
